@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Leaderboard | Next Millionaire</title>
+	<!-- Uses shared styling; app.js creates the player rows from saved JSON data. -->
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+	<header class="site-header">
+		<a class="site-name" href="../index.html">Next Millionaire</a>
+		<nav aria-label="Main navigation">
+			<a href="../index.html">Home</a>
+			<a href="game.html">Game</a>
+			<a href="leaderboard.html" aria-current="page">Leaderboard</a>
+			<a href="login.html" data-auth-link>Login</a>
+			<a href="signup.html" data-auth-link>Sign up</a>
+			<a href="#" data-logout hidden>Log out</a>
+		</nav>
+	</header>
+	<main>
+		<section class="card">
+			<h1>Leaderboard</h1>
+			<p>
+				See how you rank against players saved in this browser.
+				Standings update as scores change.
+			</p>
+			<!-- JavaScript replaces these placeholders with counts and ranked player rows. -->
+			<p class="player-count" id="registered-player-count" aria-live="polite">
+				Players on this browser: loading…
+			</p>
+			<p class="player-count" id="scored-player-count" aria-live="polite">
+				Players with a saved prize: loading…
+			</p>
+			<ol class="leaderboard-list" id="leaderboard-list"></ol>
+			<p class="form-message" id="leaderboard-message" role="status" aria-live="polite"></p>
+			<div class="actions">
+				<a class="button" href="game.html">Play the game</a>
+				<a class="button button-secondary" href="../index.html">Back to home</a>
+			</div>
+		</section>
+	</main>
+	<!-- app.js detects leaderboard markup and renders it on this page. -->
+	<script src="../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 600" fill="none">
+	<!-- Original trophy illustration for the signed-in welcome lobby. -->
+	<defs>
+		<radialGradient id="halo" cx="0" cy="0" r="1" gradientTransform="matrix(0 250 -250 0 351 302)" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#7B80FF" stop-opacity=".55"/>
+			<stop offset="1" stop-color="#7B80FF" stop-opacity="0"/>
+		</radialGradient>
+		<linearGradient id="cup" x1="249" y1="98" x2="462" y2="350" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#FFF0AD"/>
+			<stop offset=".4" stop-color="#F6CF69"/>
+			<stop offset=".72" stop-color="#DCA53D"/>
+			<stop offset="1" stop-color="#FFF0A1"/>
+		</linearGradient>
+		<linearGradient id="stem" x1="338" y1="330" x2="375" y2="437" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#FFEBA0"/>
+			<stop offset="1" stop-color="#C58A27"/>
+		</linearGradient>
+		<linearGradient id="plinth" x1="193" y1="428" x2="502" y2="524" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#5F72D9"/>
+			<stop offset=".48" stop-color="#272D79"/>
+			<stop offset="1" stop-color="#9272D0"/>
+		</linearGradient>
+		<filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+			<feGaussianBlur stdDeviation="15"/>
+		</filter>
+	</defs>
+	<circle cx="350" cy="285" r="244" fill="url(#halo)"/>
+	<path d="m92 70 180 284H159L92 70Z" fill="#57CFFF" fill-opacity=".1"/>
+	<path d="m606 70-180 284h113l67-284Z" fill="#FFD877" fill-opacity=".13"/>
+	<path d="M104 462c115-64 377-64 492 0" stroke="#9DA9FF" stroke-opacity=".4" stroke-width="3"/>
+	<ellipse cx="350" cy="471" rx="220" ry="38" fill="#FFD05F" fill-opacity=".26" filter="url(#blur)"/>
+	<ellipse cx="350" cy="474" rx="218" ry="41" stroke="#E9C86B" stroke-opacity=".78" stroke-width="3"/>
+	<path d="M254 117h192v69c0 81-43 140-96 140s-96-59-96-140v-69Z" fill="url(#cup)" stroke="#FFF1B9" stroke-width="5"/>
+	<path d="M254 151h-46v42c0 54 35 84 78 82m160-124h46v42c0 54-35 84-78 82" stroke="url(#cup)" stroke-width="20" stroke-linecap="round"/>
+	<path d="M326 319h48v73h-48z" fill="url(#stem)"/>
+	<path d="M289 386h122l27 49H262l27-49Z" fill="url(#plinth)" stroke="#E9C86B" stroke-width="4"/>
+	<path d="M306 402h88" stroke="#FFF0AD" stroke-opacity=".72" stroke-width="4" stroke-linecap="round"/>
+	<path d="m350 160 11 23 26 4-19 18 5 26-23-13-23 13 5-26-19-18 26-4 11-23Z" fill="#FFF9D6"/>
+	<g fill="#FFF0AD">
+		<circle cx="150" cy="243" r="5"/><circle cx="543" cy="209" r="4"/>
+		<circle cx="195" cy="117" r="3"/><circle cx="507" cy="327" r="5"/>
+		<circle cx="253" cy="322" r="3"/><circle cx="444" cy="93" r="4"/>
+	</g>
+	<g stroke="#FFD877" stroke-linecap="round" stroke-width="4">
+		<path d="M128 335h22m-11-11v22M541 125h22m-11-11v22M501 372h20m-10-10v20"/>
+	</g>
+</svg>

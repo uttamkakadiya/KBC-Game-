@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" fill="none">
+	<!-- Original stage illustration used behind the quiz; SVG scales cleanly to every screen. -->
+	<defs>
+		<linearGradient id="backdrop" x1="800" y1="0" x2="800" y2="1000" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#070D2A"/>
+			<stop offset=".52" stop-color="#111456"/>
+			<stop offset="1" stop-color="#050817"/>
+		</linearGradient>
+		<radialGradient id="stage" cx="0" cy="0" r="1" gradientTransform="matrix(0 550 -880 0 800 770)" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#233C93" stop-opacity=".9"/>
+			<stop offset=".58" stop-color="#101653" stop-opacity=".53"/>
+			<stop offset="1" stop-color="#080B1F" stop-opacity="0"/>
+		</radialGradient>
+		<linearGradient id="beamBlue" x1="0" y1="0" x2="0" y2="1">
+			<stop stop-color="#75D7FF" stop-opacity=".3"/>
+			<stop offset="1" stop-color="#6176FF" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient id="beamGold" x1="0" y1="0" x2="0" y2="1">
+			<stop stop-color="#FFE7A1" stop-opacity=".33"/>
+			<stop offset="1" stop-color="#FFB743" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient id="ring" x1="800" y1="675" x2="800" y2="955" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#E8C777"/>
+			<stop offset=".52" stop-color="#8D7FE8"/>
+			<stop offset="1" stop-color="#5CCBFF"/>
+		</linearGradient>
+		<filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+			<feGaussianBlur stdDeviation="12"/>
+		</filter>
+	</defs>
+	<path fill="url(#backdrop)" d="M0 0h1600v1000H0z"/>
+	<path fill="url(#stage)" d="M0 0h1600v1000H0z"/>
+	<path fill="url(#beamBlue)" d="m230 94 150-5 440 700-248 21L230 94Z"/>
+	<path fill="url(#beamGold)" d="m1360 86 150 20-420 700-250-20 520-700Z"/>
+	<path fill="url(#beamBlue)" opacity=".7" d="m668 115 90-7 42 683-161 0 29-676Z"/>
+	<path fill="url(#beamGold)" opacity=".7" d="m867 108 92 8 56 675-161 0 13-683Z"/>
+	<g opacity=".92">
+		<path fill="#A8E8FF" d="M230 89a14 14 0 1 0 0-28 14 14 0 0 0 0 28Z"/>
+		<path fill="#FFF0BD" d="M1359 99a14 14 0 1 0 0-28 14 14 0 0 0 0 28Z"/>
+		<path fill="#9EEBFF" d="M713 118a12 12 0 1 0 0-24 12 12 0 0 0 0 24Z"/>
+		<path fill="#FFE6A3" d="M912 124a12 12 0 1 0 0-24 12 12 0 0 0 0 24Z"/>
+	</g>
+	<g fill="#BCEBFF" opacity=".68">
+		<circle cx="115" cy="271" r="3"/><circle cx="305" cy="379" r="2"/>
+		<circle cx="463" cy="213" r="3"/><circle cx="563" cy="334" r="2"/>
+		<circle cx="1045" cy="267" r="2"/><circle cx="1201" cy="387" r="3"/>
+		<circle cx="1441" cy="290" r="2"/><circle cx="1321" cy="197" r="3"/>
+	</g>
+	<ellipse cx="800" cy="828" fill="#7687FF" fill-opacity=".19" rx="503" ry="106" filter="url(#glow)"/>
+	<ellipse cx="800" cy="850" stroke="url(#ring)" stroke-opacity=".78" stroke-width="5" rx="495" ry="103"/>
+	<ellipse cx="800" cy="850" stroke="#A8BBFF" stroke-opacity=".42" stroke-width="2" rx="403" ry="79"/>
+	<ellipse cx="800" cy="852" fill="#0A1238" fill-opacity=".88" rx="310" ry="54"/>
+	<path stroke="#C2DAFF" stroke-opacity=".19" stroke-width="2" d="M0 925c227-64 465-97 800-97s573 33 800 97M0 968c239-48 482-72 800-72s561 24 800 72"/>
+	<path fill="#FFE4A0" fill-opacity=".8" d="M386 805h5v5h-5zM1205 759h4v4h-4zM530 681h4v4h-4zM1060 645h5v5h-5z"/>
+</svg>

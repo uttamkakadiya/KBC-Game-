@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Who Will Become the Next Millionaire? | Next Millionaire</title>
+	<!-- The quiz uses shared components plus game-specific studio colours. -->
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="quiz-show-page">
+	<!-- Shared navigation is styled for the dark studio background by quiz-show-page. -->
+	<header class="site-header">
+		<a class="site-name" href="../index.html">Next Millionaire</a>
+		<nav aria-label="Main navigation">
+			<a href="../index.html">Home</a>
+			<a href="game.html" aria-current="page">Game</a>
+			<a href="leaderboard.html">Leaderboard</a>
+			<a href="login.html" data-auth-link>Login</a>
+			<a href="signup.html" data-auth-link>Sign up</a>
+			<a href="#" data-logout hidden>Log out</a>
+		</nav>
+	</header>
+	<main class="game-main">
+		<section class="card game-card">
+			<!-- Web Audio is silent until a user gesture; this button lets players control it. -->
+			<div class="sound-control">
+				<button id="sound-toggle" type="button" aria-pressed="true">Sound: On</button>
+				<span id="sound-status" role="status" aria-live="polite">
+					Applause and game sounds are on. You can turn them off.
+				</span>
+			</div>
+			<div class="game-heading">
+				<p class="eyebrow">NEXT MILLIONAIRE</p>
+				<h1>Who Will Become the Next Millionaire?</h1>
+				<p class="intro">
+					Take the hot seat and answer 15 original questions to win the top prize of ₹1 crore.
+				</p>
+			</div>
+
+			<!-- The intro panel is replaced by the quiz panel when Start game is selected. -->
+			<div id="game-intro" class="game-intro">
+				<p id="welcome-player">Log in to play and save your best score.</p>
+				<ul class="game-rules">
+					<li>Choose one of four answers for each question.</li>
+					<li>Use 50:50, a simulated Ask the Audience poll, or Swap Question once each.</li>
+					<li>Reach questions 5 and 10 to secure a guaranteed prize.</li>
+					<li>Walk away between questions to keep the prize you have reached.</li>
+				</ul>
+				<p
+					id="player-message"
+					class="form-message is-error"
+					role="status"
+					aria-live="polite"
+					hidden
+				></p>
+				<div class="actions">
+					<button id="start-game" type="button">Start game</button>
+					<button
+						id="login-to-play"
+						class="button button-secondary"
+						type="button"
+						hidden
+					>
+						Log in to play
+					</button>
+				</div>
+			</div>
+
+			<!-- game.js fills the question, answer choices, lifelines, rank, and prize ladder. -->
+			<div id="quiz-panel" class="quiz-layout" hidden>
+				<div class="quiz-main">
+					<div class="quiz-topline">
+						<p id="question-progress" class="quiz-badge">Question 1 of 15</p>
+						<p id="current-prize" class="quiz-badge">Top prize: ₹1,000</p>
+					</div>
+					<p class="player-greeting">
+						Contestant: <strong id="player-name"></strong>
+					</p>
+					<h2 id="question-text" class="question-text"></h2>
+					<div id="answer-options" class="answer-options"></div>
+					<p
+						id="game-message"
+						class="game-message"
+						role="status"
+						aria-live="polite"
+					></p>
+					<div class="lifeline-area">
+						<h3>Use a lifeline</h3>
+						<div class="lifeline-buttons">
+							<button
+								type="button"
+								class="lifeline-button"
+								data-lifeline="fifty-fifty"
+							>
+								50:50
+							</button>
+							<button
+								type="button"
+								class="lifeline-button"
+								data-lifeline="audience"
+							>
+								Ask the Audience
+							</button>
+							<button
+								type="button"
+								class="lifeline-button"
+								data-lifeline="swap"
+							>
+								Swap Question
+							</button>
+						</div>
+						<p
+							id="lifeline-message"
+							class="lifeline-message"
+							role="status"
+							aria-live="polite"
+						></p>
+					</div>
+					<button id="quit-game" type="button" class="quit-button">
+						Walk away with my prize
+					</button>
+				</div>
+				<aside class="ladder-panel" aria-label="Prize ladder">
+					<section class="rank-widget" aria-labelledby="game-ranking-title">
+						<h2 id="game-ranking-title">Player rankings</h2>
+						<p class="ladder-legend">Other accounts saved in this browser.</p>
+						<p id="game-rank-status" class="rank-status" aria-live="polite">
+							Finding your rank…
+						</p>
+						<ol id="game-ranking-list" class="mini-ranking"></ol>
+						<a class="ranking-link" href="leaderboard.html">See full rankings</a>
+					</section>
+					<section class="prize-widget" aria-labelledby="prize-ladder-title">
+						<h2 id="prize-ladder-title">Prize ladder</h2>
+						<p class="ladder-legend">Gold marks a guaranteed prize.</p>
+						<ol id="prize-ladder" class="prize-ladder"></ol>
+					</section>
+				</aside>
+			</div>
+
+			<!-- The result panel appears after a wrong answer, walk-away, or full win. -->
+			<div id="game-result" class="game-result" hidden>
+				<p class="eyebrow">FINAL RESULT</p>
+				<h2 id="result-title"></h2>
+				<p id="result-details"></p>
+				<p id="final-rank" class="rank-status" aria-live="polite"></p>
+				<p
+					id="result-save-message"
+					class="form-message"
+					role="status"
+					aria-live="polite"
+				></p>
+				<div class="actions">
+					<button id="restart-game" type="button">Play again</button>
+					<a id="leaderboard-link" class="button button-secondary" href="leaderboard.html">View leaderboard</a>
+				</div>
+			</div>
+		</section>
+	</main>
+	<!-- app.js provides account/score helpers before the question bank and game controller load. -->
+	<script src="../js/app.js"></script>
+	<!-- Questions are data, sound.js supplies original effects, and game.js runs the quiz. -->
+	<script src="../js/questions.js"></script>
+	<script src="../js/sound.js"></script>
+	<script src="../js/game.js"></script>
+</body>
+</html>
