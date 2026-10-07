@@ -168,11 +168,13 @@
 			}
 
 			try {
-				const user = readUsers().find((account) =>
-					account.email === email && account.password === password
-				);
+				const user = readUsers().find((account) => account.email === email);
 				if (!user) {
-					showMessage(message, "Email or password is incorrect.", true);
+					showMessage(message, "No account found for this email. New user? Please sign up.", true);
+					return;
+				}
+				if (user.password !== password) {
+					showMessage(message, "Please enter the correct email address and password.", true);
 					return;
 				}
 				localStorage.setItem(CURRENT_USER_KEY, user.email);

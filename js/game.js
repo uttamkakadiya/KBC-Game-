@@ -37,6 +37,8 @@
 		questionIndex: 0,
 		bankedPrize: 0,
 		usedLifelines: new Set(),
+		lifelineUsedThisQuestion: false,
+		retryAvailable: true,
 		optionRevealTimer: null
 	};
 
@@ -116,7 +118,9 @@
 
 	function setLifelinesEnabled(enabled) {
 		lifelineButtons.forEach((button, name) => {
-			button.disabled = !enabled || state.usedLifelines.has(name);
+			button.disabled = !enabled
+				|| state.lifelineUsedThisQuestion
+				|| state.usedLifelines.has(name);
 		});
 	}
 
@@ -249,6 +253,8 @@
 			state.questionIndex = 0;
 			state.bankedPrize = 0;
 			state.usedLifelines.clear();
+			state.lifelineUsedThisQuestion = false;
+			state.retryAvailable = true;
 			state.active = true;
 			finalRank.textContent = "";
 			playerMessage.hidden = true;
@@ -269,8 +275,22 @@
 		if (!state.active) {
 			return;
 		}
+		setLifelinesEnabled(false);
 		const question = state.questions[state.questionIndex];
 		const buttons = [...optionsContainer.querySelectorAll(".answer-option")];
+		if (answerIndex !== question.answer && state.retryAvailable) {
+			state.retryAvailable = false;
+			buttons.forEach((button) => {
+				const index = Number(button.dataset.answerIndex);
+				button.disabled = index === answerIndex || button.hidden;
+				if (index === answerIndex) {
+					button.classList.add("is-incorrect");
+				}
+			});
+			gameMessage.textContent = "That answer is incorrect. You have one retry—choose again.";
+			return;
+		}
+
 		// Lock every choice immediately, then mark the correct and selected answers for feedback.
 		buttons.forEach((button) => {
 			button.disabled = true;
@@ -296,6 +316,7 @@
 			state.bankedPrize = prizeLadder[state.questionIndex - 1];
 			window.QuizShowSound.play("milestone");
 		}
+		state.lifelineUsedThisQuestion = false;
 		gameMessage.textContent = state.questionIndex === prizeLadder.length
 			? "Correct! You have answered every question."
 			: "Correct! Get ready for the next question.";
@@ -366,7 +387,7 @@
 	}
 
 	function useLifeline(name) {
-		if (!state.active || state.usedLifelines.has(name)) {
+		if (!state.active || state.lifelineUsedThisQuestion || state.usedLifelines.has(name)) {
 			return;
 		}
 		state.usedLifelines.add(name);
@@ -380,6 +401,8 @@
 		if (!succeeded) {
 			state.usedLifelines.delete(name);
 		} else {
+			state.lifelineUsedThisQuestion = true;
+			lifelineMessage.textContent += " You can use another lifeline on the next question.";
 			window.QuizShowSound.play("lifeline");
 		}
 		setLifelinesEnabled(state.optionRevealTimer === null);

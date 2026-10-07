@@ -634,9 +634,12 @@ button:disabled {
 }
 
 @keyframes trophy-float {
-	0%, 100% {
+
+	0%,
+	100% {
 		transform: translateY(0);
 	}
+
 	50% {
 		transform: translateY(-9px);
 	}
@@ -799,15 +802,27 @@ button:disabled {
 }
 
 .lifeline-buttons {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 0.5rem;
 }
 
+.lifeline-option {
+	min-width: 0;
+}
+
 .lifeline-button {
+	width: 100%;
 	padding: 0.6rem 0.75rem;
 	background: #312e81;
 	font-size: 0.88rem;
+}
+
+.lifeline-option p {
+	margin: 0.45rem 0 0;
+	color: #6b7280;
+	font-size: 0.78rem;
+	line-height: 1.45;
 }
 
 .lifeline-button:not(:disabled):hover {
@@ -1056,6 +1071,10 @@ button:disabled {
 	background: #25347f;
 }
 
+.quiz-show-page .lifeline-option p {
+	color: #cbd5e1;
+}
+
 .quiz-show-page .lifeline-button:not(:disabled):hover {
 	background: #394da9;
 }
@@ -1102,6 +1121,7 @@ button:disabled {
 }
 
 @media (max-width: 640px) {
+
 	/* On phones, stack the navigation and quiz columns and prevent fixed backgrounds. */
 	body {
 		background-attachment: scroll;
@@ -1167,6 +1187,10 @@ button:disabled {
 		grid-template-columns: 1fr;
 	}
 
+	.lifeline-buttons {
+		grid-template-columns: 1fr;
+	}
+
 	.answer-options {
 		grid-template-columns: 1fr;
 	}
@@ -1202,6 +1226,7 @@ button:disabled {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
 	/* Respect the operating system setting for players who prefer less animation. */
 	*,
 	*::before,
@@ -1211,6 +1236,7 @@ button:disabled {
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
 	}
+
 	.lobby-art img {
 		animation: none;
 	}

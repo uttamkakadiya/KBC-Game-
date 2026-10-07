@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +8,7 @@
 	<!-- Shared styles define the show theme, responsive layout, and dashboard cards. -->
 	<link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body class="lobby-page">
 	<!-- JavaScript hides login links and reveals Log out after finding a signed-in account. -->
 	<header class="site-header">
@@ -29,13 +31,7 @@
 					YOUR STAGE IS READY
 				</p>
 				<h1 id="home-welcome">Welcome to the show!</h1>
-				<p
-					id="home-message"
-					class="form-message is-error"
-					role="status"
-					aria-live="polite"
-					hidden
-				></p>
+				<p id="home-message" class="form-message is-error" role="status" aria-live="polite" hidden></p>
 				<p class="lobby-description">
 					The lights are on, the questions are waiting, and your million-rupee moment could be one game away.
 				</p>
@@ -100,4 +96,5 @@
 	<!-- Load the home-page script after its elements so it can update the greeting and stats. -->
 	<script src="js/index.js"></script>
 </body>
+
 </html>

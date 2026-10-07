@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +8,7 @@
 	<!-- The quiz uses shared components plus game-specific studio colours. -->
 	<link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body class="quiz-show-page">
 	<!-- Shared navigation is styled for the dark studio background by quiz-show-page. -->
 	<header class="site-header">
@@ -42,25 +44,15 @@
 				<p id="welcome-player">Log in to play and save your best score.</p>
 				<ul class="game-rules">
 					<li>Choose one of four answers for each question.</li>
-					<li>Use 50:50, a simulated Ask the Audience poll, or Swap Question once each.</li>
+					<li>Use only one lifeline per question; each lifeline is available once per game.</li>
+					<li>If you choose a wrong answer, you get one retry on that question per game.</li>
 					<li>Reach questions 5 and 10 to secure a guaranteed prize.</li>
 					<li>Walk away between questions to keep the prize you have reached.</li>
 				</ul>
-				<p
-					id="player-message"
-					class="form-message is-error"
-					role="status"
-					aria-live="polite"
-					hidden
-				></p>
+				<p id="player-message" class="form-message is-error" role="status" aria-live="polite" hidden></p>
 				<div class="actions">
 					<button id="start-game" type="button">Start game</button>
-					<button
-						id="login-to-play"
-						class="button button-secondary"
-						type="button"
-						hidden
-					>
+					<button id="login-to-play" class="button button-secondary" type="button" hidden>
 						Log in to play
 					</button>
 				</div>
@@ -78,43 +70,30 @@
 					</p>
 					<h2 id="question-text" class="question-text"></h2>
 					<div id="answer-options" class="answer-options"></div>
-					<p
-						id="game-message"
-						class="game-message"
-						role="status"
-						aria-live="polite"
-					></p>
+					<p id="game-message" class="game-message" role="status" aria-live="polite"></p>
 					<div class="lifeline-area">
 						<h3>Use a lifeline</h3>
 						<div class="lifeline-buttons">
-							<button
-								type="button"
-								class="lifeline-button"
-								data-lifeline="fifty-fifty"
-							>
-								50:50
-							</button>
-							<button
-								type="button"
-								class="lifeline-button"
-								data-lifeline="audience"
-							>
-								Ask the Audience
-							</button>
-							<button
-								type="button"
-								class="lifeline-button"
-								data-lifeline="swap"
-							>
-								Swap Question
-							</button>
+							<div class="lifeline-option">
+								<button type="button" class="lifeline-button" data-lifeline="fifty-fifty">
+									50:50
+								</button>
+								<p>Removes two wrong answers, leaving the correct choice and one other.</p>
+							</div>
+							<div class="lifeline-option">
+								<button type="button" class="lifeline-button" data-lifeline="audience">
+									Ask the Audience
+								</button>
+								<p>Shows a simulated audience poll to help you choose an answer.</p>
+							</div>
+							<div class="lifeline-option">
+								<button type="button" class="lifeline-button" data-lifeline="swap">
+									Swap Question
+								</button>
+								<p>Replaces this question with another one at the same prize level.</p>
+							</div>
 						</div>
-						<p
-							id="lifeline-message"
-							class="lifeline-message"
-							role="status"
-							aria-live="polite"
-						></p>
+						<p id="lifeline-message" class="lifeline-message" role="status" aria-live="polite"></p>
 					</div>
 					<button id="quit-game" type="button" class="quit-button">
 						Walk away with my prize
@@ -144,15 +123,11 @@
 				<h2 id="result-title"></h2>
 				<p id="result-details"></p>
 				<p id="final-rank" class="rank-status" aria-live="polite"></p>
-				<p
-					id="result-save-message"
-					class="form-message"
-					role="status"
-					aria-live="polite"
-				></p>
+				<p id="result-save-message" class="form-message" role="status" aria-live="polite"></p>
 				<div class="actions">
 					<button id="restart-game" type="button">Play again</button>
-					<a id="leaderboard-link" class="button button-secondary" href="leaderboard.html">View leaderboard</a>
+					<a id="leaderboard-link" class="button button-secondary" href="leaderboard.html">View
+						leaderboard</a>
 				</div>
 			</div>
 		</section>
@@ -164,4 +139,5 @@
 	<script src="../js/sound.js"></script>
 	<script src="../js/game.js"></script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +8,7 @@
 	<!-- Pages in /html go up one folder to load the shared stylesheet. -->
 	<link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
 	<!-- Shared navigation links the login page to the rest of the site. -->
 	<header class="site-header">
@@ -24,24 +26,11 @@
 			<!-- novalidate leaves validation to the JavaScript submit handler in app.js. -->
 			<form id="login-form" novalidate>
 				<label for="email">Email address</label>
-				<input
-					id="email"
-					name="email"
-					type="email"
-					inputmode="email"
-					autocomplete="email"
-					placeholder="e.g. name@gmail.com"
-					required
-				>
+				<input id="email" name="email" type="email" inputmode="email" autocomplete="email"
+					placeholder="e.g. name@gmail.com" required>
 				<label for="password">Password</label>
-				<input
-					id="password"
-					name="password"
-					type="password"
-					autocomplete="current-password"
-					placeholder="Enter your password"
-					required
-				>
+				<input id="password" name="password" type="password" autocomplete="current-password"
+					placeholder="At least 8 characters" required>
 				<button type="submit">Log in</button>
 				<p class="form-message" id="login-message" role="status" aria-live="polite"></p>
 			</form>
@@ -51,4 +40,5 @@
 	<!-- app.js handles account checks, inline error messages, and the successful redirect. -->
 	<script src="../js/app.js"></script>
 </body>
+
 </html>
