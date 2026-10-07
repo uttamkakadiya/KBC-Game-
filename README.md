@@ -1,45 +1,178 @@
 # Next Millionaire
 
-Next Millionaire is a browser-based quiz game inspired by televised general-knowledge contests. It has 15 prize rounds, three lifelines, synthesized sound effects, and a leaderboard.
+Next Millionaire is a browser-based, general-knowledge quiz game inspired by televised quiz shows. Players answer 15 questions, use lifelines, and try to win the top prize of **₹1 crore**. The project is built with plain HTML, CSS, and JavaScript; it has no build step or third-party package dependencies.
 
-## Run the game
+> **Project type:** learning/demo project. Accounts and scores are saved only in the current browser. This is not a real online service or a secure authentication system.
 
-The project has no build step or package dependencies. Serve the project folder with a local static web server, then open the site in a browser. For example, in VS Code you can use the Live Server extension and open `index.html`.
+## Contents
 
-The main page redirects signed-out visitors to the login page. Create an account or sign in to reach the game and player dashboard.
+- [Game artwork](#game-artwork)
+- [Play the game](#play-the-game)
+- [Game rules](#game-rules)
+- [Run locally](#run-locally)
+- [Project map](#project-map)
+- [How the code works](#how-the-code-works)
+- [Edit the question bank](#edit-the-question-bank)
+- [Browser data and privacy](#browser-data-and-privacy)
+- [Troubleshooting](#troubleshooting)
+- [Test your changes](#test-your-changes)
+- [Ideas for extending the project](#ideas-for-extending-the-project)
 
-## Project structure
+## Game artwork
 
-| Path | Purpose |
+The repository includes original SVG illustrations used by the lobby and quiz theme. These scale cleanly to different screen sizes.
+
+![Golden trophy on the Next Millionaire stage](images/welcome-trophy.svg)
+
+*The welcome trophy illustration from `images/welcome-trophy.svg`.*
+
+![Quiz-show stage lighting](images/quiz-show-studio.svg)
+
+*The quiz-show studio backdrop from `images/quiz-show-studio.svg`.*
+
+## Play the game
+
+1. Open the project using a local web server (instructions below).
+2. Create an account with a display name, email address, and password of at least eight characters, or sign in to an existing account in this browser.
+3. On the home page, select **Take the hot seat** to open the quiz.
+4. Select **Start game**. Read each question; the choices appear after a short pause.
+5. Choose an answer, optionally use a lifeline, and continue through the prize rounds.
+6. Finish the game or walk away between questions. Your best result is saved to this browser's leaderboard.
+
+### Pages
+
+| Page | What it does |
 | --- | --- |
-| `index.html` | Entry page; loads `js/index.js` and redirects to login when signed out. |
-| `html/login.html` | Sign-in form. |
-| `html/signup.html` | Account registration form. |
-| `html/home.html` | Redirects to the root entry page. |
-| `html/game.html` | Quiz interface, prize ladder, lifelines, and results. |
-| `html/leaderboard.html` | Browser-local player rankings. |
-| `css/styles.css` | Shared page styles, components, responsive layout, and game-show theme. |
-| `js/app.js` | Shared account, navigation, storage, and leaderboard helpers. |
-| `js/index.js` | Signed-in home-page greeting and player dashboard. |
-| `js/game.js` | Quiz flow, answer checks, prize tracking, lifelines, and score saving. |
-| `js/questions.js` | Question bank, grouped by prize round. |
-| `js/sound.js` | Sound effects synthesized with the Web Audio API. |
-| `images/` | Page artwork and other image assets. |
-| `sounds/` | Audio assets, if used by the pages. |
+| `index.html` | Entry point and signed-in player dashboard. Signed-out visitors are redirected to login. |
+| `html/login.html` | Signs in an account already saved in this browser. |
+| `html/signup.html` | Creates a browser-local demo account and signs it in. |
+| `html/game.html` | Runs the quiz, displays lifelines and the prize ladder, and shows the final result. |
+| `html/leaderboard.html` | Lists accounts saved in this browser, ordered by their best prize. |
+| `html/home.html` | Compatibility page that redirects to the root entry point. |
 
-## How the game works
+## Game rules
 
-- There are 15 prize rounds. Each round contains alternate questions at the same prize level.
-- Players get a few seconds to read each question before its answer choices appear.
-- Each lifeline can be used once per game, and only one lifeline can be used on a given question.
-- A wrong answer allows one retry in that game. A second wrong answer ends the game.
-- Questions already shown to a player are tracked so they are not selected again until that round's question pool is exhausted.
-- Reaching questions 5 and 10 banks a guaranteed prize. Players can also walk away between questions.
-- A player's best prize is saved to the leaderboard.
+### Questions and prizes
+
+There are **15 prize levels** and **60 original questions**: four alternate questions at each level. One question is selected from each level for a game. The prize ladder is:
+
+| Question | Prize | Question | Prize | Question | Prize |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | ₹1,000 | 6 | ₹20,000 | 11 | ₹6,40,000 |
+| 2 | ₹2,000 | 7 | ₹40,000 | 12 | ₹12,50,000 |
+| 3 | ₹3,000 | 8 | ₹80,000 | 13 | ₹25,00,000 |
+| 4 | ₹5,000 | 9 | ₹1,60,000 | 14 | ₹50,00,000 |
+| 5 | ₹10,000 | 10 | ₹3,20,000 | 15 | ₹1,00,00,000 |
+
+One question is selected and added to the player's history for every prize level when a game starts. The game avoids selecting those questions again until that level's pool has been used up; then the pool can start again. This selection is recorded even if the player does not reach that round during the game.
+
+### Answering and retry
+
+- Each question is shown by itself for **three seconds** before the answer options appear.
+- A correct answer advances the player to the next prize level.
+- The player gets **one retry for the entire game**. After the first wrong choice, that option is disabled and another choice can be selected. A second wrong choice ends the game.
+- If the game ends on a wrong answer, the final prize falls back to the most recently secured milestone: question 5 (₹10,000) or question 10 (₹3,20,000). If neither milestone was reached, the prize is ₹0.
+- After a correct answer, a player can select **Walk away with my prize** before answering the next question. Walking away keeps the value of the last correctly answered question.
+
+### Lifelines
+
+Each lifeline is available once per game, and only one lifeline may be used on a question.
+
+| Lifeline | What it does |
+| --- | --- |
+| **50:50** | Hides two incorrect choices, leaving the correct answer and one alternative. |
+| **Ask the Audience** | Displays a simulated percentage poll. It is generated by the game and deliberately favours the correct answer; it is not a real audience vote. |
+| **Swap Question** | Replaces the current question with an unused alternative from the same prize level. If no replacement is available, the swap is not consumed. |
+
+Sound effects and studio ambience are generated locally with the browser's Web Audio API. Use the **Sound: On/Off** control on the game page to change the sound setting for the current page session.
+
+## Run locally
+
+No compilation, package install, or backend server is required. Serve the project root with a static web server, then open the root `index.html` page.
+
+### Option A: VS Code Live Server
+
+1. Open the project folder in VS Code.
+2. Install/enable the Live Server extension if it is not already available.
+3. Right-click the root `index.html` and choose **Open with Live Server**.
+4. Use the local URL opened in your browser.
+
+### Option B: Python
+
+If Python is installed, open PowerShell in the project root and run:
+
+```powershell
+py -m http.server 8000
+```
+
+Then open <http://localhost:8000/>. Stop the server with **Ctrl+C** in the PowerShell window.
+
+Serving the files over HTTP gives the site a consistent browser origin for `localStorage`. Opening different copies of the project from different folders, browser profiles, or origins can make them appear to have separate accounts and scores.
+
+## Project map
+
+```text
+.
+├── index.html                 # Entry page and signed-in dashboard
+├── README.md                  # Project and contributor documentation
+├── css/
+│   └── styles.css             # Shared layout, components, and responsive styles
+├── html/
+│   ├── game.html              # Quiz interface
+│   ├── home.html              # Redirect to index.html
+│   ├── leaderboard.html       # Local leaderboard
+│   ├── login.html             # Login form
+│   └── signup.html            # Registration form
+├── images/
+│   ├── quiz-show-studio.svg   # Quiz background artwork
+│   ├── site-background.svg    # Shared background artwork
+│   └── welcome-trophy.svg    # Lobby trophy artwork
+└── js/
+    ├── app.js                # Accounts, navigation, storage, leaderboard
+    ├── game.js               # Quiz state and game flow
+    ├── index.js              # Home-page dashboard
+    ├── questions.js          # Question data
+    └── sound.js              # Synthesized audio
+```
+
+### Page script loading
+
+The entry page loads `js/index.js` after its dashboard markup. Login, signup, and leaderboard pages load `js/app.js`. The game page loads its scripts in dependency order:
+
+1. `js/app.js` provides account and score helpers.
+2. `js/questions.js` defines `window.KbcQuestionBank`.
+3. `js/sound.js` defines the local sound controller.
+4. `js/game.js` starts the quiz and uses the helpers/data/controllers above.
+
+Keep this order if you change the script tags in `html/game.html`.
+
+## How the code works
+
+### Accounts and page navigation
+
+`js/app.js` attaches form handlers only when it finds their matching forms. Signup validates the name (2–50 characters), email format, password length (at least eight characters), and password confirmation. A new account is then signed in and sent to the dashboard. Login checks the saved email and password and displays inline feedback for unknown accounts or incorrect credentials.
+
+`index.html` loads `js/index.js`, which verifies the signed-in account, redirects signed-out visitors to login, and fills in the greeting and score/rank cards.
+
+### Game controller
+
+`js/game.js` owns the in-memory state for a playthrough: selected questions, current round, secured prize, used lifelines, retry availability, and the answer-reveal timer. It builds answer buttons and the prize ladder from the current state. The page markup in `html/game.html` supplies the containers and controls.
+
+### Question data
+
+`js/questions.js` exposes `window.KbcQuestionBank`. The outer array represents the 15 prize levels; each inner array holds the alternatives for that level. Question text and choices are inserted as text, not interpreted as HTML.
+
+### Scores and leaderboard
+
+When a game ends, `js/game.js` sends the prize to the score helper in `js/app.js`. The helper keeps each player's **best** result rather than overwriting it with a lower score. The leaderboard sorts by prize from highest to lowest, then by player name for ties. The home-page dashboard reads the same browser-local data.
+
+### Styling and accessibility
+
+`css/styles.css` contains shared components, page layouts, responsive rules, and the quiz-show theme. The HTML uses semantic headings, labels, buttons, navigation landmarks, and live status messages for form/game feedback. Keep visible form labels and useful image alternative text when extending the interface.
 
 ## Edit the question bank
 
-Open `js/questions.js`. `window.KbcQuestionBank` is an array of 15 round arrays. Add a question object to the round whose prize level it should use:
+Open `js/questions.js` and add a question object inside the correct prize-round array:
 
 ```js
 {
@@ -49,20 +182,70 @@ Open `js/questions.js`. `window.KbcQuestionBank` is an array of 15 round arrays.
 }
 ```
 
-Each question needs a prompt, four answer strings, and an `answer` index from `0` to `3` identifying the correct option. Keep questions distinct within each round so the player's no-repeat history can work as intended.
+Requirements:
 
-## Browser storage and limitations
+- `question` is the prompt shown to the player.
+- `options` contains four answer strings.
+- `answer` is the **zero-based** index of the correct option: `0`, `1`, `2`, or `3`.
+- Put the question in the correct round so its difficulty matches the prize level.
+- Keep prompts distinct in a round. The game uses the normalized question text as the key for its no-repeat history.
 
-Accounts, the signed-in session, question history, and scores are stored in the current browser's `localStorage`. The leaderboard is therefore local to that browser profile; it is not shared between devices or visitors. Clearing browser data removes the saved accounts and scores.
+For example, `answer: 2` means the third item (`"Paris"`) is correct. When editing the bank, check the fact and spelling, verify the answer index, and run the syntax check below.
 
-This is a front-end learning/demo project, not a production authentication system. Account data (including passwords) is stored in browser storage and should not be used for real credentials or sensitive information.
+## Browser data and privacy
 
-## Validate JavaScript
+This app uses `localStorage`; there is no database server or cross-device account service. Data belongs to the browser profile and origin from which the site is opened. Another computer, browser profile, or local-server URL may have a different storage area.
 
-If Node.js is installed, check each JavaScript file for syntax errors from the project folder:
+The app uses these storage entries:
+
+| Key | Purpose |
+| --- | --- |
+| `ourGameUsers` | Demo account names, email addresses, and passwords. |
+| `ourGameCurrentUser` | Email address of the currently signed-in account. |
+| `ourGameScores` | Best prize recorded for each account. |
+| `ourGameQuestionHistory:<encoded-email>` | Question prompts already selected for each prize level for that account. |
+
+**Security warning:** passwords are stored as ordinary browser data, not hashed or protected by a server. Do not use a real password or personal/sensitive information. Anyone with access to this browser profile or its developer tools can inspect or modify the data. This implementation is for learning and demonstration only.
+
+To remove one unrelated local-storage entry, use the browser's developer tools for the exact site origin and remove only that named key. Avoid `localStorage.clear()` unless you intend to erase **all** data for this game's origin, including accounts, scores, and question history.
+
+## Troubleshooting
+
+| Symptom | What to check |
+| --- | --- |
+| The home page returns to login | Sign in or create an account in the same browser profile and site origin. |
+| Accounts or leaderboard look empty | Confirm that you reopened the same local-server URL and browser profile. Browser storage is scoped to the origin. |
+| A score is not saved | Confirm you are signed in and that browser storage is enabled and not full/blocked. |
+| Sound is silent | Check the in-game sound control and browser tab volume. Browsers may require a click before playing Web Audio. |
+| The game cannot start | Confirm the script tags in `html/game.html` retain their dependency order and `js/questions.js` has 15 non-empty round arrays. |
+| A question appears more than once | A prize level repeats only after its alternatives have been exhausted, or if its saved question-history entry has been removed. Questions for all rounds are recorded when a game starts, even if a round is not reached. |
+
+## Test your changes
+
+### JavaScript syntax
+
+With Node.js installed, run this command in PowerShell from the project root:
 
 ```powershell
 Get-ChildItem .\js\*.js | ForEach-Object { node --check $_.FullName }
 ```
 
-The pages can also be checked manually in a browser: register or sign in, start a game, try the lifelines and retry, finish a round, then review the saved leaderboard.
+### Manual browser checklist
+
+- Sign up with valid and invalid values; confirm the inline messages and successful redirect.
+- Sign in with an existing account, an unknown email, and a wrong password.
+- Start a game and confirm the options appear after the reading pause.
+- Try each lifeline; confirm that no second lifeline can be used on the same question.
+- Choose a wrong answer and confirm the one retry works; choose wrong again to finish the game.
+- Answer correctly through a milestone, walk away, or complete the game, then check the saved best score and leaderboard.
+- Resize the browser to check that pages and lifeline descriptions remain usable on mobile.
+
+## Ideas for extending the project
+
+These are possible next steps, not features currently included:
+
+- Add a backend API and database for shared accounts and leaderboards.
+- Replace browser-stored passwords with server-side authentication and secure password hashing.
+- Add automated tests for question validation, game-state transitions, and score calculations.
+- Add real screenshots or a hosted demo link to show the pages in action.
+- Add more question rounds or tools for contributors to validate question data.
