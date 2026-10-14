@@ -46,7 +46,8 @@
 					<li>Choose one of four answers for each question.</li>
 					<li>Use only one lifeline per question; each lifeline is available once per game.</li>
 					<li>If you choose a wrong answer, you get one retry on that question per game.</li>
-					<li>Reach questions 5 and 10 to secure a guaranteed prize.</li>
+					<li>Reach questions 5 and 10 to secure guaranteed prize milestones.</li>
+					<li>Your result and saved score reflect the highest question you answered correctly.</li>
 					<li>Walk away between questions to keep the prize you have reached.</li>
 				</ul>
 				<p id="player-message" class="form-message is-error" role="status" aria-live="polite" hidden></p>
@@ -69,6 +70,7 @@
 						Contestant: <strong id="player-name"></strong>
 					</p>
 					<h2 id="question-text" class="question-text"></h2>
+					<p id="answer-timer" class="answer-timer" role="timer" aria-live="off" hidden>Time left: 20s</p>
 					<div id="answer-options" class="answer-options"></div>
 					<p id="game-message" class="game-message" role="status" aria-live="polite"></p>
 					<div class="lifeline-area">

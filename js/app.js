@@ -8,6 +8,7 @@
 	const SCORES_KEY = "ourGameScores";
 
 	// Storage readers and leaderboard data
+	// Return a saved value as JSON, or use the supplied default when no value exists yet.
 	function readJson(key, fallback) {
 		const value = localStorage.getItem(key);
 		if (value === null) {
@@ -25,6 +26,7 @@
 		return users;
 	}
 
+	// Read the saved prize records and ensure the storage value is a list.
 	function readScores() {
 		const scores = readJson(SCORES_KEY, []);
 		if (!Array.isArray(scores)) {
@@ -33,6 +35,7 @@
 		return scores;
 	}
 
+	// Combine valid accounts with their best scores and sort the resulting leaderboard.
 	function getLeaderboardEntries() {
 		// localStorage only shares standings between accounts in this browser profile.
 		const scoresByEmail = new Map(
@@ -54,6 +57,7 @@
 	}
 
 	// Shared page feedback and navigation
+	// Update a feedback element's message and success/error appearance.
 	function showMessage(element, message, isError) {
 		if (!element) {
 			return;
@@ -63,6 +67,7 @@
 		element.classList.toggle("is-success", !isError && message !== "");
 	}
 
+	// Show login/signup or logout links according to the saved session.
 	function updateNavigation() {
 		try {
 			// Pages mark login/signup links and logout links with data attributes for this toggle.
@@ -97,6 +102,7 @@
 	}
 
 	// Signup and login handlers are attached only when their matching form exists on the current page.
+	// Validate registration fields, save a new account, and sign it in.
 	function setupSignup() {
 		const form = document.querySelector("#signup-form");
 		if (!form) {
@@ -146,6 +152,7 @@
 		});
 	}
 
+	// Validate the submitted credentials against accounts in browser storage.
 	function setupLogin() {
 		const form = document.querySelector("#login-form");
 		if (!form) {
@@ -187,6 +194,7 @@
 	}
 
 	// Game score persistence
+	// Save a completed game's prize only if it improves the player's best score.
 	function saveFinalScore(score) {
 		const message = document.querySelector("#score-message");
 		if (!Number.isSafeInteger(score) || score < 0) {
@@ -233,6 +241,7 @@
 	}
 
 	// Leaderboard rendering
+	// Render ranked entries with text nodes and display any storage errors.
 	function renderLeaderboard() {
 		const list = document.querySelector("#leaderboard-list");
 		if (!list) {

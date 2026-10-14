@@ -18,6 +18,7 @@
 	const currentPrizeText = document.querySelector("#current-prize");
 	const ladder = document.querySelector("#prize-ladder");
 	const gameMessage = document.querySelector("#game-message");
+	const answerTimer = document.querySelector("#answer-timer");
 	const lifelineMessage = document.querySelector("#lifeline-message");
 	const playerMessage = document.querySelector("#player-message");
 	const resultTitle = document.querySelector("#result-title");
@@ -39,10 +40,13 @@
 		usedLifelines: new Set(),
 		lifelineUsedThisQuestion: false,
 		retryAvailable: true,
-		optionRevealTimer: null
+		optionRevealTimer: null,
+		answerTimerId: null,
+		answerTimeLeft: 20
 	};
 
 	// Formatting, randomization, and player/question storage
+	// Display prize amounts using Indian-style digit grouping.
 	function formatPrize(amount) {
 		return `₹${amount.toLocaleString("en-IN")}`;
 	}
@@ -57,6 +61,7 @@
 		return shuffled;
 	}
 
+	// Resolve the active account from the saved browser session.
 	function getSignedInPlayer() {
 		const email = localStorage.getItem("ourGameCurrentUser");
 		if (!email) {
@@ -69,10 +74,12 @@
 		return users.find((user) => user.email === email) || null;
 	}
 
+	// Keep question history separate for every player.
 	function getQuestionHistoryKey() {
 		return `ourGameQuestionHistory:${encodeURIComponent(state.player.email)}`;
 	}
 
+	// Load and validate the history array for all prize rounds.
 	function readQuestionHistory(roundCount) {
 		const savedHistory = localStorage.getItem(getQuestionHistoryKey());
 		if (savedHistory === null) {
@@ -88,10 +95,12 @@
 		return history;
 	}
 
+	// Normalize question text so capitalization does not create duplicate history entries.
 	function questionKey(question) {
 		return question.question.trim().toLocaleLowerCase();
 	}
 
+	// Select one unused question per prize round and save those selections to history.
 	function chooseQuestionsForGame() {
 		const history = readQuestionHistory(window.KbcQuestionBank.length);
 		const questions = window.KbcQuestionBank.map((round, roundIndex) => {
@@ -110,12 +119,14 @@
 	}
 
 	// View rendering helpers
+	// Show exactly one of the intro, active quiz, and final-result panels.
 	function showPanel(panelToShow) {
 		intro.hidden = panelToShow !== intro;
 		panel.hidden = panelToShow !== panel;
 		result.hidden = panelToShow !== result;
 	}
 
+	// Enable lifelines only while they are valid for the current question.
 	function setLifelinesEnabled(enabled) {
 		lifelineButtons.forEach((button, name) => {
 			button.disabled = !enabled
@@ -141,6 +152,7 @@
 		});
 	}
 
+	// Display the player's rank and a short leaderboard list beside the quiz.
 	function renderPlayerRank() {
 		if (!state.player) {
 			gameRankStatus.textContent = "Log in to see your rank against other players on this browser.";
@@ -187,10 +199,51 @@
 		}
 	}
 
+	// Stop the countdown without changing its display; each question starts a fresh 20-second count.
+	function stopAnswerTimer() {
+		if (state.answerTimerId !== null) {
+			window.clearInterval(state.answerTimerId);
+			state.answerTimerId = null;
+		}
+	}
+
+	// Start the answer countdown only after the answer choices are visible.
+	function startAnswerTimer() {
+		stopAnswerTimer();
+		state.answerTimeLeft = 20;
+		if (answerTimer) {
+			answerTimer.textContent = "Time left: 20s";
+			answerTimer.hidden = false;
+		}
+		state.answerTimerId = window.setInterval(() => {
+			if (!state.active) {
+				stopAnswerTimer();
+				return;
+			}
+			state.answerTimeLeft -= 1;
+			if (answerTimer) {
+				answerTimer.textContent = `Time left: ${state.answerTimeLeft}s`;
+			}
+			if (state.answerTimeLeft <= 0) {
+				stopAnswerTimer();
+				if (state.active) {
+					const question = state.questions[state.questionIndex];
+					const correctAnswer = question ? question.options[question.answer] : "";
+					gameMessage.textContent = "Time is up! The round has ended.";
+					finishGame("incorrect", correctAnswer);
+				}
+			}
+		}, 1000);
+	}
+
 	function renderQuestion() {
 		if (state.optionRevealTimer !== null) {
 			window.clearTimeout(state.optionRevealTimer);
 			state.optionRevealTimer = null;
+		}
+		stopAnswerTimer();
+		if (answerTimer) {
+			answerTimer.hidden = true;
 		}
 		// Question text and answer buttons are created from the selected round's data.
 		const question = state.questions[state.questionIndex];
@@ -227,6 +280,7 @@
 				optionsContainer.hidden = false;
 				gameMessage.textContent = "Choose your answer.";
 				setLifelinesEnabled(true);
+				startAnswerTimer();
 			}
 		}, 3000);
 		renderLadder();
@@ -234,6 +288,7 @@
 	}
 
 	// Game start and answer flow
+	// Reset game state, choose questions, and display the first round.
 	function startGame() {
 		try {
 			state.player = getSignedInPlayer();
@@ -271,6 +326,7 @@
 		}
 	}
 
+	// Check the selected answer, allow the single retry, and advance or end the game.
 	function chooseAnswer(answerIndex) {
 		if (!state.active) {
 			return;
@@ -291,6 +347,7 @@
 			return;
 		}
 
+		stopAnswerTimer();
 		// Lock every choice immediately, then mark the correct and selected answers for feedback.
 		buttons.forEach((button) => {
 			button.disabled = true;
@@ -329,6 +386,7 @@
 	}
 
 	// Lifeline actions
+	// Hide two randomly selected incorrect options.
 	function useFiftyFifty() {
 		const question = state.questions[state.questionIndex];
 		const incorrect = question.options
@@ -341,6 +399,7 @@
 		lifelineMessage.textContent = "50:50 used. Two incorrect options have been removed.";
 	}
 
+	// Create a simulated audience poll that favors the correct answer.
 	function useAudiencePoll() {
 		const question = state.questions[state.questionIndex];
 		const answerCount = question.options.length;
@@ -361,6 +420,7 @@
 		lifelineMessage.textContent = `Simulated audience poll: ${votes.map((vote, index) => `${String.fromCharCode(65 + index)} ${vote}%`).join(" · ")}`;
 	}
 
+	// Replace this round's question with an unused alternative at the same prize level.
 	function useSwapQuestion() {
 		// The replacement comes from the same round, so the current prize difficulty is unchanged.
 		try {
@@ -386,6 +446,7 @@
 		}
 	}
 
+	// Enforce the per-question and per-game limits before using a lifeline.
 	function useLifeline(name) {
 		if (!state.active || state.lifelineUsedThisQuestion || state.usedLifelines.has(name)) {
 			return;
@@ -409,6 +470,7 @@
 	}
 
 	// Results, score saving, and event wiring
+	// Stop timers, calculate the final prize, save the score, and show the result.
 	function finishGame(reason, correctAnswer = "") {
 		if (!state.active && result.hidden === false) {
 			return;
@@ -417,11 +479,12 @@
 			window.clearTimeout(state.optionRevealTimer);
 			state.optionRevealTimer = null;
 		}
+		stopAnswerTimer();
 		state.active = false;
 		setLifelinesEnabled(false);
-		// A wrong answer falls back to the last banked milestone; walking away keeps the current prize.
+		// Losses and walkaways keep the highest prize level the player answered correctly.
 		let finalPrize = state.bankedPrize;
-		if (reason === "quit" && state.questionIndex > 0) {
+		if ((reason === "incorrect" || reason === "quit") && state.questionIndex > 0) {
 			finalPrize = Math.max(finalPrize, prizeLadder[state.questionIndex - 1]);
 		} else if (reason === "win") {
 			finalPrize = prizeLadder[prizeLadder.length - 1];

@@ -11,10 +11,12 @@
 	let currentEmail = "";
 
 	// Dashboard data and rendering
+	// Format prize values consistently with the game and leaderboard.
 	function formatPrize(amount) {
 		return `₹${amount.toLocaleString("en-IN")}`;
 	}
 
+	// Read saved accounts and scores, then update the signed-in player's dashboard.
 	function updateDashboard() {
 		try {
 			const users = JSON.parse(localStorage.getItem("ourGameUsers") || "[]");

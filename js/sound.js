@@ -14,16 +14,19 @@
 	let ambienceActive = false;
 	let ambienceStep = 0;
 
+	// Keep the button label and accessibility state synchronized with the sound setting.
 	function updateControl() {
 		soundButton.textContent = `Sound: ${enabled ? "On" : "Off"}`;
 		soundButton.setAttribute("aria-pressed", String(enabled));
 	}
 
+	// Report audio availability and playback errors beside the sound button.
 	function setStatus(message, isError = false) {
 		soundStatus.textContent = message;
 		soundStatus.classList.toggle("is-error", isError);
 	}
 
+	// Create the audio graph only when a user gesture allows audio to start.
 	function getAudioContext() {
 		// Browsers require audio to be resumed after a real user interaction.
 		if (!AudioContextConstructor) {
@@ -150,6 +153,7 @@
 	}
 
 	// Audio startup and game-event cues
+	// Run a sound action when enabled and surface browser playback failures.
 	function runAudio(action) {
 		if (!enabled) {
 			return;
@@ -172,6 +176,7 @@
 		}
 	}
 
+	// Map a game event name to its corresponding synthesized sound.
 	function playCue(name) {
 		// Map game events to sound layers and short original musical note sequences.
 		if (name === "incorrect") {
@@ -197,6 +202,7 @@
 		}[name]);
 	}
 
+	// Schedule a sequence of notes relative to the current audio time.
 	function playToneCue(notes) {
 		runAudio(() => {
 			const now = audioContext.currentTime + 0.02;
@@ -211,6 +217,7 @@
 	}
 
 	// Background studio ambience
+	// Play the next quiet chord while a game is in progress.
 	function playAmbience() {
 		if (!ambienceActive) {
 			return;
@@ -234,6 +241,7 @@
 		});
 	}
 
+	// Start the repeating ambience from its first chord.
 	function startAmbience() {
 		stopAmbience();
 		ambienceStep = 0;
@@ -242,6 +250,7 @@
 		ambienceTimer = window.setInterval(playAmbience, 3200);
 	}
 
+	// Stop the ambience interval and any notes already playing.
 	function stopAmbience() {
 		ambienceActive = false;
 		if (ambienceTimer !== null) {

@@ -69,9 +69,10 @@ One question is selected and added to the player's history for every prize level
 ### Answering and retry
 
 - Each question is shown by itself for **three seconds** before the answer options appear.
+- Once the options appear, the player has **20 seconds** to answer. The countdown continues through the one allowed retry; if time runs out, the game ends.
 - A correct answer advances the player to the next prize level.
 - The player gets **one retry for the entire game**. After the first wrong choice, that option is disabled and another choice can be selected. A second wrong choice ends the game.
-- If the game ends on a wrong answer, the final prize falls back to the most recently secured milestone: question 5 (₹10,000) or question 10 (₹3,20,000). If neither milestone was reached, the prize is ₹0.
+- If the game ends on a wrong answer, the final prize is the value of the highest question answered correctly. If the player has not answered any question correctly, the prize is ₹0.
 - After a correct answer, a player can select **Walk away with my prize** before answering the next question. Walking away keeps the value of the last correctly answered question.
 
 ### Lifelines
@@ -156,7 +157,7 @@ Keep this order if you change the script tags in `html/game.html`.
 
 ### Game controller
 
-`js/game.js` owns the in-memory state for a playthrough: selected questions, current round, secured prize, used lifelines, retry availability, and the answer-reveal timer. It builds answer buttons and the prize ladder from the current state. The page markup in `html/game.html` supplies the containers and controls.
+`js/game.js` owns the in-memory state for a playthrough: selected questions, current round, secured prize, used lifelines, retry availability, the answer-reveal delay, and the 20-second answer countdown. It builds answer buttons and the prize ladder from the current state. The page markup in `html/game.html` supplies the containers and controls.
 
 ### Question data
 
@@ -237,7 +238,7 @@ Get-ChildItem .\js\*.js | ForEach-Object { node --check $_.FullName }
 - Start a game and confirm the options appear after the reading pause.
 - Try each lifeline; confirm that no second lifeline can be used on the same question.
 - Choose a wrong answer and confirm the one retry works; choose wrong again to finish the game.
-- Answer correctly through a milestone, walk away, or complete the game, then check the saved best score and leaderboard.
+- Answer correctly through a milestone, lose after a higher correct answer, walk away, or complete the game; verify the final prize and saved leaderboard score match the highest question answered correctly.
 - Resize the browser to check that pages and lifeline descriptions remain usable on mobile.
 
 ## Ideas for extending the project
