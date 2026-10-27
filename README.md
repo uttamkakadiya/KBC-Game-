@@ -88,7 +88,7 @@ Sound effects and studio ambience are generated locally with the browser's Web A
 
 ## Run locally
 
-No compilation, package install, or backend server is required. Serve the project root with a static web server, then open the root `index.html` page.
+No compilation, package install, or backend server is required. Because the project uses JavaScript ES modules, serve the project root with a static web server rather than opening the HTML files directly, then open the root `index.html` page.
 
 ### Option A: VS Code Live Server
 
@@ -134,16 +134,33 @@ Serving the files over HTTP gives the site a consistent browser origin for `loca
     └── sound.js              # Synthesized audio
 ```
 
-### Page script loading
+### JavaScript modules
 
-The entry page loads `js/index.js` after its dashboard markup. Login, signup, and leaderboard pages load `js/app.js`. The game page loads its scripts in dependency order:
+The pages load their JavaScript with `<script type="module">`, which enables the browser's built-in `import` and `export` features. The game controller imports the account/score API from `js/app.js`, the question data from `js/questions.js`, and the sound controls from `js/sound.js`. This makes each dependency explicit and avoids relying on script-tag order or adding globals to `window`. The browser loads imported files automatically; no npm package or build step is needed.
 
-1. `js/app.js` provides account and score helpers.
-2. `js/questions.js` defines `window.KbcQuestionBank`.
-3. `js/sound.js` defines the local sound controller.
-4. `js/game.js` starts the quiz and uses the helpers/data/controllers above.
+Each JavaScript module has a short comment at the top explaining its role, how it works with the other modules, and why that separation is useful. For you, this makes it easier to find the right file when adding questions, changing account behavior, adjusting the quiz, or updating sounds.
 
-Keep this order if you change the script tags in `html/game.html`.
+| Module | Responsibility | How the separation helps |
+| --- | --- | --- |
+| `js/index.js` | Home-page dashboard and sign-out behavior | Change the home page without mixing its code into the quiz. |
+| `js/app.js` | Account forms, browser session, scores, and leaderboard | Reuse shared account and score behavior across pages. |
+| `js/game.js` | Quiz flow, answers, lifelines, and prize results | Keep the game rules together while importing the features they need. |
+| `js/questions.js` | Question and answer data | Add or edit questions without changing quiz logic. |
+| `js/sound.js` | Synthesized sound effects and ambience | Adjust audio without changing game rules. |
+
+For example, `js/questions.js` makes the question bank available with an export:
+
+```js
+export const KbcQuestionBank = [/* question rounds */];
+```
+
+The game controller requests that exported value with an import:
+
+```js
+import { KbcQuestionBank } from "./questions.js";
+```
+
+The braces and exported name must match. Use the same pattern to share functions or objects between files. Every HTML page starts its entry script with `<script type="module">`, and imported file paths are relative to the importing JavaScript file.
 
 ## How the code works
 
@@ -159,7 +176,7 @@ Keep this order if you change the script tags in `html/game.html`.
 
 ### Question data
 
-`js/questions.js` exposes `window.KbcQuestionBank`. The outer array represents the 15 prize levels; each inner array holds the alternatives for that level. Question text and choices are inserted as text, not interpreted as HTML.
+`js/questions.js` exports `KbcQuestionBank`. The outer array represents the 15 prize levels; each inner array holds the alternatives for that level. Question text and choices are inserted as text, not interpreted as HTML.
 
 ### Scores and leaderboard
 

@@ -1,5 +1,13 @@
 "use strict";
 
+import { GameApp } from "./app.js";
+import { KbcQuestionBank } from "./questions.js";
+import { QuizShowSound } from "./sound.js";
+
+// This is the game page's entry module. The imports above declare the account,
+// question, and sound features the quiz depends on; the browser loads them for you.
+// Keeping the quiz state and rules here helps you find and change game behavior
+// without mixing it with account storage, question data, or sound implementation.
 (() => {
 	// Keep prize amounts and page controls together so game logic uses one source of truth.
 	// Position zero is the first question; milestone prizes are banked after questions 5 and 10.
@@ -103,8 +111,8 @@
 
 	// Select one unused question per prize round and save those selections to history.
 	function chooseQuestionsForGame() {
-		const history = readQuestionHistory(window.KbcQuestionBank.length);
-		const questions = window.KbcQuestionBank.map((round, roundIndex) => {
+		const history = readQuestionHistory(KbcQuestionBank.length);
+		const questions = KbcQuestionBank.map((round, roundIndex) => {
 			const previouslyUsed = new Set(history[roundIndex]);
 			let available = round.filter((question) => !previouslyUsed.has(questionKey(question)));
 			if (available.length === 0) {
@@ -162,7 +170,7 @@
 			return;
 		}
 		try {
-			const entries = window.GameApp.getLeaderboard();
+			const entries = GameApp.getLeaderboard();
 			const playerIndex = entries.findIndex((entry) => entry.email === state.player.email);
 			gameRankingList.replaceChildren();
 			if (playerIndex === -1) {
@@ -300,9 +308,9 @@
 				playerMessage.textContent = "Please log in or create an account before starting a game.";
 				return;
 			}
-			if (!Array.isArray(window.KbcQuestionBank)
-				|| window.KbcQuestionBank.length !== prizeLadder.length
-				|| window.KbcQuestionBank.some((round) => !Array.isArray(round) || round.length === 0)) {
+			if (!Array.isArray(KbcQuestionBank)
+				|| KbcQuestionBank.length !== prizeLadder.length
+				|| KbcQuestionBank.some((round) => !Array.isArray(round) || round.length === 0)) {
 				throw new Error("The question bank does not match the prize ladder.");
 			}
 
@@ -317,8 +325,8 @@
 			finalRank.textContent = "";
 			playerMessage.hidden = true;
 			document.querySelector("#player-name").textContent = state.player.name;
-			window.QuizShowSound.play("start");
-			window.QuizShowSound.startAmbience();
+			QuizShowSound.play("start");
+			QuizShowSound.startAmbience();
 			renderPlayerRank();
 			showPanel(panel);
 			renderQuestion();
@@ -369,12 +377,12 @@
 			return;
 		}
 
-		window.QuizShowSound.play("correct");
+		QuizShowSound.play("correct");
 		state.questionIndex += 1;
 		// Reaching question 5 or 10 secures that level even after a later wrong answer.
 		if (state.questionIndex === 5 || state.questionIndex === 10) {
 			state.bankedPrize = prizeLadder[state.questionIndex - 1];
-			window.QuizShowSound.play("milestone");
+			QuizShowSound.play("milestone");
 		}
 		state.lifelineUsedThisQuestion = false;
 		gameMessage.textContent = state.questionIndex === prizeLadder.length
@@ -427,9 +435,9 @@
 	function useSwapQuestion() {
 		// The replacement comes from the same round, so the current prize difficulty is unchanged.
 		try {
-			const history = readQuestionHistory(window.KbcQuestionBank.length);
+			const history = readQuestionHistory(KbcQuestionBank.length);
 			const usedThisRound = new Set(history[state.questionIndex]);
-			const alternatives = window.KbcQuestionBank[state.questionIndex]
+			const alternatives = KbcQuestionBank[state.questionIndex]
 				.filter((question) => !usedThisRound.has(questionKey(question)));
 			if (alternatives.length === 0) {
 				lifelineMessage.textContent = "No unused replacement questions remain for this prize round.";
@@ -467,7 +475,7 @@
 		} else {
 			state.lifelineUsedThisQuestion = true;
 			lifelineMessage.textContent += " You can use another lifeline on the next question.";
-			window.QuizShowSound.play("lifeline");
+			QuizShowSound.play("lifeline");
 		}
 		setLifelinesEnabled(state.optionRevealTimer === null);
 	}
@@ -507,14 +515,14 @@
 			? `${state.player.name}, your final prize is ${formatPrize(finalPrize)}. The correct answer was ${correctAnswer}.`
 			: `${state.player.name}, your final prize is ${formatPrize(finalPrize)}.`;
 		showPanel(result);
-		window.QuizShowSound.stopAmbience();
+		QuizShowSound.stopAmbience();
 		if (reason === "win") {
-			window.QuizShowSound.play("win");
+			QuizShowSound.play("win");
 		} else if (reason === "incorrect" || reason === "timeout") {
-			window.QuizShowSound.play("incorrect");
+			QuizShowSound.play("incorrect");
 		}
 
-		const scoreSaved = window.GameApp.saveFinalScore(finalPrize);
+		const scoreSaved = GameApp.saveFinalScore(finalPrize);
 		renderPlayerRank();
 		const saveMessage = document.querySelector("#result-save-message");
 		saveMessage.textContent = scoreSaved

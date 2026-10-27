@@ -1,9 +1,10 @@
 "use strict";
 
-// Each outer array is one prize/difficulty round; every inner item is a distinct GK alternative.
-// game.js rotates through each round's questions without repeating them for the signed-in player.
-// The answer property is the zero-based correct option index used by game.js.
-window.KbcQuestionBank = [
+// This module stores question data separately from the quiz rules and exports it
+// for game.js to import. Each outer array is a prize round; its inner items are
+// alternatives for that level, and answer is the correct option's zero-based index.
+// This helps you add or edit questions without changing how the game runs.
+export const KbcQuestionBank = [
 	// Prize rounds 1–5: introductory general knowledge.
 	[
 		{

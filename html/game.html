@@ -134,12 +134,8 @@
 			</div>
 		</section>
 	</main>
-	<!-- app.js provides account/score helpers before the question bank and game controller load. -->
-	<script src="../js/app.js"></script>
-	<!-- Questions are data, sound.js supplies original effects, and game.js runs the quiz. -->
-	<script src="../js/questions.js"></script>
-	<script src="../js/sound.js"></script>
-	<script src="../js/game.js"></script>
+	<!-- game.js imports account helpers, question data, and sound effects as ES modules. -->
+	<script type="module" src="../js/game.js"></script>
 </body>
 
 </html>

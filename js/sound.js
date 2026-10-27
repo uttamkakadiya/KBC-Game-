@@ -1,6 +1,10 @@
 "use strict";
 
-(() => {
+// This module owns the quiz's synthesized sound effects and studio ambience.
+// It creates the audio controls once and exports a small API for game.js to use.
+// Keeping audio separate helps you adjust sounds without changing quiz rules,
+// and lets the game request effects by name instead of managing audio internals.
+const QuizShowSound = (() => {
 	// Sound is synthesized locally with Web Audio, so no external audio files are needed.
 	// Audio state
 	const soundButton = document.querySelector("#sound-toggle");
@@ -286,10 +290,13 @@
 	});
 
 	updateControl();
-	window.QuizShowSound = {
+	return {
 		play: playCue,
 		startAmbience,
 		stopAmbience,
 		applaud: playApplause
 	};
 })();
+
+// Share only the sound controls needed by the game module.
+export { QuizShowSound };

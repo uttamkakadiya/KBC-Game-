@@ -1,5 +1,9 @@
 "use strict";
 
+// This module is the home page's entry script. It reads the signed-in player's
+// browser data, fills the dashboard, and handles sign-out and data refreshes.
+// Keeping dashboard behavior separate from the HTML makes it easier for you to
+// change the home page without mixing it into the quiz or account implementation.
 (() => {
 	// Home-page elements and signed-in account state
 	// These elements are filled from localStorage after the signed-in player's identity is confirmed.

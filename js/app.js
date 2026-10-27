@@ -1,6 +1,10 @@
 "use strict";
 
-(() => {
+// This module keeps account, session, and leaderboard features in one shared place.
+// It initializes the controls present on each page and exports GameApp for modules
+// such as game.js to use. This helps you update account or score behavior once
+// without copying it between pages or relying on a global variable.
+const GameApp = (() => {
 	// Storage keys
 	// These keys keep account, session, and prize data separate in this browser's localStorage.
 	const USERS_KEY = "ourGameUsers";
@@ -304,7 +308,6 @@
 	updateNavigation();
 	setupSignup();
 	setupLogin();
-	window.GameApp = { saveFinalScore, getLeaderboard: getLeaderboardEntries };
 	// Accept game results only when the game supplies a score value.
 	window.addEventListener("game:ended", (event) => {
 		if (!event.detail || !Object.prototype.hasOwnProperty.call(event.detail, "score")) {
@@ -332,4 +335,8 @@
 		renderLeaderboard();
 		window.dispatchEvent(new Event("next-millionaire:leaderboard-updated"));
 	}, 5000);
+	return { saveFinalScore, getLeaderboard: getLeaderboardEntries };
 })();
+
+// Export only the public account and leaderboard functions that other modules need.
+export { GameApp };
