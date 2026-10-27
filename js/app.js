@@ -92,6 +92,7 @@
 	}
 
 	// Account validation and form handlers
+	// Validate email syntax with both the browser's email checker and the project's domain rule.
 	function isValidEmail(email) {
 		// Use the browser's email syntax check and require a dotted domain with a valid-looking suffix.
 		const emailField = document.createElement("input");
@@ -299,11 +300,12 @@
 	}
 
 	// Initialise only the features whose page elements are present.
-	// Page startup and cross-tab updates
+	// Initialize only the shared features used by the current page.
 	updateNavigation();
 	setupSignup();
 	setupLogin();
 	window.GameApp = { saveFinalScore, getLeaderboard: getLeaderboardEntries };
+	// Accept game results only when the game supplies a score value.
 	window.addEventListener("game:ended", (event) => {
 		if (!event.detail || !Object.prototype.hasOwnProperty.call(event.detail, "score")) {
 			showMessage(document.querySelector("#score-message"), "The game ended without providing a score.", true);
@@ -312,6 +314,7 @@
 		saveFinalScore(event.detail.score);
 	});
 	renderLeaderboard();
+	// Refresh account and score views when another tab changes browser storage.
 	window.addEventListener("storage", (event) => {
 		// The browser emits "storage" in other tabs when this profile's saved data changes.
 		if (event.key === USERS_KEY || event.key === SCORES_KEY || event.key === CURRENT_USER_KEY) {
@@ -319,11 +322,12 @@
 			window.dispatchEvent(new Event("next-millionaire:leaderboard-updated"));
 		}
 	});
+	// Refresh same-tab views after signup or score-saving code dispatches this event.
 	window.addEventListener("next-millionaire:scores-changed", () => {
 		renderLeaderboard();
 		window.dispatchEvent(new Event("next-millionaire:leaderboard-updated"));
 	});
-	// Polling also refreshes rankings after score changes within this same tab.
+	// Periodic refresh keeps same-tab leaderboard changes visible even without an event.
 	window.setInterval(() => {
 		renderLeaderboard();
 		window.dispatchEvent(new Event("next-millionaire:leaderboard-updated"));

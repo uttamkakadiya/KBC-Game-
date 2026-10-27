@@ -59,7 +59,7 @@
 		}
 	}
 
-	// The home page is private to signed-in accounts, so unauthenticated visitors return to login.
+	// Protect the dashboard by redirecting missing or invalid sessions to the login page.
 	try {
 		currentEmail = localStorage.getItem("ourGameCurrentUser") || "";
 		if (!currentEmail) {
@@ -84,6 +84,7 @@
 		});
 		const logout = document.querySelector("#home-logout");
 		logout.hidden = false;
+		// Remove the local session before returning to login when the player signs out.
 		logout.addEventListener("click", (event) => {
 			event.preventDefault();
 			localStorage.removeItem("ourGameCurrentUser");
@@ -97,13 +98,14 @@
 		document.querySelector("#home-welcome").textContent = "";
 	}
 
-	// Cross-tab storage events refresh the stats; polling also catches same-tab score updates.
+	// Recalculate dashboard cards when a different tab changes the saved accounts or scores.
 	window.addEventListener("storage", (event) => {
 		if (event.key === "ourGameUsers" || event.key === "ourGameScores") {
 			updateDashboard();
 		}
 	});
+	// Listen for score updates made in this tab by the shared account/game code.
 	window.addEventListener("next-millionaire:scores-changed", updateDashboard);
-	// Refresh periodically as well, since same-tab storage writes do not emit "storage".
+	// Poll as a fallback because same-tab localStorage writes do not emit "storage".
 	window.setInterval(updateDashboard, 5000);
 })();

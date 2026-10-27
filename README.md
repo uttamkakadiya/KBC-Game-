@@ -48,7 +48,6 @@ The repository includes original SVG illustrations used by the lobby and quiz th
 | `html/signup.html` | Creates a browser-local demo account and signs it in. |
 | `html/game.html` | Runs the quiz, displays lifelines and the prize ladder, and shows the final result. |
 | `html/leaderboard.html` | Lists accounts saved in this browser, ordered by their best prize. |
-| `html/home.html` | Compatibility page that redirects to the root entry point. |
 
 ## Game rules
 
@@ -120,7 +119,6 @@ Serving the files over HTTP gives the site a consistent browser origin for `loca
 │   └── styles.css             # Shared layout, components, and responsive styles
 ├── html/
 │   ├── game.html              # Quiz interface
-│   ├── home.html              # Redirect to index.html
 │   ├── leaderboard.html       # Local leaderboard
 │   ├── login.html             # Login form
 │   └── signup.html            # Registration form

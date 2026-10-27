@@ -42,6 +42,7 @@
 	}
 
 	// Sound primitives and effects
+	// Build a short random-noise buffer for the applause and crowd effects.
 	function makeNoiseBuffer(duration) {
 		// Short random-noise buffers create original synthesized crowd and clap textures.
 		const frameCount = Math.ceil(audioContext.sampleRate * duration);
@@ -53,6 +54,7 @@
 		return buffer;
 	}
 
+	// Create one fading oscillator note and track it when it belongs to the ambience.
 	function playTone(frequency, startTime, duration, volume, wave = "sine", ambience = false) {
 		// Each note uses its own oscillator and envelope to fade smoothly in and out.
 		const oscillator = audioContext.createOscillator();
@@ -72,6 +74,7 @@
 		oscillator.stop(startTime + duration + 0.03);
 	}
 
+	// Layer crowd noise and varied claps to celebrate correct answers and milestones.
 	function playApplause(intensity = 1) {
 		// A 2.5-second crowd bed plus sharp, varied transients makes each clap distinct.
 		runAudio(() => {
@@ -119,6 +122,7 @@
 		});
 	}
 
+	// Play a descending synthesized phrase when an answer is wrong or time runs out.
 	function playSadPiano() {
 		runAudio(() => {
 			const now = audioContext.currentTime + 0.02;
@@ -261,7 +265,7 @@
 		ambienceOscillators.clear();
 	}
 
-	// Sound toggle and public game-audio API
+	// Let players mute/unmute audio and expose only the controls the game needs.
 	soundButton.addEventListener("click", () => {
 		// The toggle also stops ongoing ambience when sound is switched off.
 		enabled = !enabled;

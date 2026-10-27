@@ -1,7 +1,7 @@
 "use strict";
 
 (() => {
-	// Prize structure and page elements
+	// Keep prize amounts and page controls together so game logic uses one source of truth.
 	// Position zero is the first question; milestone prizes are banked after questions 5 and 10.
 	const prizeLadder = [
 		1_000, 2_000, 3_000, 5_000, 10_000,
@@ -30,7 +30,7 @@
 		lifelineNames.map((name) => [name, document.querySelector(`[data-lifeline="${name}"]`)])
 	);
 
-	// This object is the in-memory state for the current playthrough; a restart resets it.
+	// Track the current playthrough here; startGame resets these values before each new game.
 	const state = {
 		active: false,
 		player: null,
@@ -45,12 +45,13 @@
 		answerTimeLeft: 20
 	};
 
-	// Formatting, randomization, and player/question storage
+	// Shared helpers for display, question selection, and browser-persisted player data.
 	// Display prize amounts using Indian-style digit grouping.
 	function formatPrize(amount) {
 		return `₹${amount.toLocaleString("en-IN")}`;
 	}
 
+	// Randomize a copy of a list so the original question bank and history remain unchanged.
 	function shuffle(items) {
 		// Fisher-Yates returns a shuffled copy so the original question bank stays unchanged.
 		const shuffled = [...items];
@@ -118,7 +119,7 @@
 		return questions;
 	}
 
-	// View rendering helpers
+	// Rendering helpers keep DOM updates separate from answer and scoring rules.
 	// Show exactly one of the intro, active quiz, and final-result panels.
 	function showPanel(panelToShow) {
 		intro.hidden = panelToShow !== intro;
@@ -135,6 +136,7 @@
 		});
 	}
 
+	// Rebuild the prize ladder so its current-question and milestone markers match game state.
 	function renderLadder() {
 		// Rebuild the ladder from the prize data and highlight the active question and milestones.
 		ladder.replaceChildren();
@@ -230,12 +232,13 @@
 					const question = state.questions[state.questionIndex];
 					const correctAnswer = question ? question.options[question.answer] : "";
 					gameMessage.textContent = "Time is up! The round has ended.";
-					finishGame("incorrect", correctAnswer);
+					finishGame("timeout", correctAnswer);
 				}
 			}
 		}, 1000);
 	}
 
+	// Draw the current question and reveal its choices after the reading pause.
 	function renderQuestion() {
 		if (state.optionRevealTimer !== null) {
 			window.clearTimeout(state.optionRevealTimer);
@@ -287,7 +290,7 @@
 		setLifelinesEnabled(false);
 	}
 
-	// Game start and answer flow
+	// Start, answer, and progress handlers control the main quiz state machine.
 	// Reset game state, choose questions, and display the first round.
 	function startGame() {
 		try {
@@ -469,7 +472,7 @@
 		setLifelinesEnabled(state.optionRevealTimer === null);
 	}
 
-	// Results, score saving, and event wiring
+	// Finish the current round once, save its prize, and wire the page controls below.
 	// Stop timers, calculate the final prize, save the score, and show the result.
 	function finishGame(reason, correctAnswer = "") {
 		if (!state.active && result.hidden === false) {
@@ -484,7 +487,8 @@
 		setLifelinesEnabled(false);
 		// Losses and walkaways keep the highest prize level the player answered correctly.
 		let finalPrize = state.bankedPrize;
-		if ((reason === "incorrect" || reason === "quit") && state.questionIndex > 0) {
+		if ((reason === "incorrect" || reason === "timeout" || reason === "quit")
+			&& state.questionIndex > 0) {
 			finalPrize = Math.max(finalPrize, prizeLadder[state.questionIndex - 1]);
 		} else if (reason === "win") {
 			finalPrize = prizeLadder[prizeLadder.length - 1];
@@ -492,18 +496,21 @@
 
 		const labels = {
 			incorrect: "Game over",
+			timeout: "Time is up!",
 			quit: "You have walked away",
 			win: "You are the next millionaire!"
 		};
 		resultTitle.textContent = labels[reason];
-		resultDetails.textContent = reason === "incorrect"
+		resultDetails.textContent = reason === "timeout"
+			? `${state.player.name}, time ran out. Your final prize is ${formatPrize(finalPrize)}. The correct answer was ${correctAnswer}.`
+			: reason === "incorrect"
 			? `${state.player.name}, your final prize is ${formatPrize(finalPrize)}. The correct answer was ${correctAnswer}.`
 			: `${state.player.name}, your final prize is ${formatPrize(finalPrize)}.`;
 		showPanel(result);
 		window.QuizShowSound.stopAmbience();
 		if (reason === "win") {
 			window.QuizShowSound.play("win");
-		} else if (reason === "incorrect") {
+		} else if (reason === "incorrect" || reason === "timeout") {
 			window.QuizShowSound.play("incorrect");
 		}
 
@@ -517,6 +524,7 @@
 		renderLadder();
 	}
 
+	// Connect visible controls to the game actions without inline JavaScript in the HTML.
 	document.querySelector("#start-game").addEventListener("click", startGame);
 	document.querySelector("#restart-game").addEventListener("click", startGame);
 	document.querySelector("#quit-game").addEventListener("click", () => finishGame("quit"));
@@ -530,6 +538,7 @@
 		window.location.href = "leaderboard.html";
 	});
 
+	// Restore the signed-in greeting on page load, or explain how to log in before playing.
 	try {
 		const player = getSignedInPlayer();
 		if (player) {

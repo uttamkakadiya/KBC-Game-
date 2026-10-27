@@ -24,7 +24,7 @@ body {
 /* ==========================================================================
    Shared navigation and layout
    ========================================================================== */
-/* The same header and navigation appear on every page. */
+/* Shared header, branding, and link states keep navigation consistent on every page. */
 .site-header {
 	display: flex;
 	align-items: center;
@@ -45,6 +45,7 @@ body {
 	white-space: nowrap;
 }
 
+/* Flex wrapping keeps navigation links usable when the viewport narrows. */
 nav {
 	display: flex;
 	flex-wrap: wrap;
@@ -65,6 +66,7 @@ nav a[aria-current="page"] {
 	color: #fff0bd;
 }
 
+/* Keep page content centered and limit line lengths on large displays. */
 main {
 	width: min(100% - 2rem, 720px);
 	margin: 3rem auto;
@@ -92,6 +94,7 @@ main {
 	color: #172554;
 }
 
+/* Normalize heading spacing and paragraph readability across pages. */
 h1 {
 	margin: 0 0 0.75rem;
 	font-size: 2rem;
@@ -128,6 +131,7 @@ button:not(:disabled):hover {
 	background: #1d4ed8;
 }
 
+/* Distinguish secondary actions from the main call-to-action. */
 .button-secondary {
 	background: #e7e9f2;
 	color: #1f2937;
@@ -152,6 +156,7 @@ button:not(:disabled):hover {
 	color: #6b7280;
 }
 
+/* Keep labels and form controls aligned and easy to use on touch screens. */
 label {
 	display: block;
 	margin: 1rem 0 0.4rem;
@@ -229,6 +234,7 @@ button:disabled {
 	box-shadow: inset 4px 0 #d6aa4a;
 }
 
+/* Give rank, player name, and prize separate visual emphasis in each row. */
 .leaderboard-rank {
 	color: #6b7280;
 	font-weight: 800;
@@ -315,6 +321,7 @@ button:disabled {
 	color: #1d4ed8;
 }
 
+/* Keep auxiliary account and navigation links visually distinct. */
 .player-count {
 	margin: 0.5rem 0;
 	font-weight: 700;
@@ -360,6 +367,7 @@ button:disabled {
 	color: #f8fafc;
 }
 
+/* Use oversized circles as non-interactive decoration behind the hero content. */
 .lobby-hero::before,
 .lobby-hero::after {
 	position: absolute;
@@ -384,12 +392,14 @@ button:disabled {
 	height: 650px;
 }
 
+/* Layer the hero text and trophy artwork above the decorative background circles. */
 .lobby-copy,
 .lobby-art {
 	position: relative;
 	z-index: 1;
 }
 
+/* Establish the hero's text hierarchy and a small live-status accent. */
 .lobby-copy {
 	max-width: 610px;
 }
@@ -476,6 +486,7 @@ button:disabled {
 	color: #f5ce71;
 }
 
+/* Center the trophy and its caption within the hero's artwork column. */
 .lobby-art {
 	display: grid;
 	min-height: 330px;
@@ -526,6 +537,7 @@ button:disabled {
 	font-size: 1rem;
 }
 
+/* Use a dark glass panel so player statistics stand out on the studio background. */
 .player-dashboard {
 	margin-top: 1.25rem;
 	padding: clamp(1.2rem, 3.5vw, 2rem);
@@ -536,6 +548,7 @@ button:disabled {
 	color: #f8fafc;
 }
 
+/* Arrange the player statistics as responsive dashboard cards. */
 .dashboard-heading {
 	display: flex;
 	align-items: flex-end;
@@ -566,6 +579,7 @@ button:disabled {
 	gap: 0.8rem;
 }
 
+/* Keep the three dashboard values aligned and make their icons visually distinct. */
 .player-stat {
 	display: flex;
 	min-height: 86px;
@@ -633,6 +647,7 @@ button:disabled {
 	color: #fecaca;
 }
 
+/* Add a gentle float to the trophy; reduced-motion preferences disable it below. */
 @keyframes trophy-float {
 
 	0%,
@@ -688,6 +703,7 @@ button:disabled {
 	line-height: 1.8;
 }
 
+/* Put the question and the supporting rank/prize widgets into two columns. */
 .quiz-layout {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) 245px;
@@ -695,6 +711,7 @@ button:disabled {
 	gap: 1.5rem;
 }
 
+/* Keep grid children from forcing the question column wider than its container. */
 .quiz-main {
 	min-width: 0;
 }
@@ -716,6 +733,7 @@ button:disabled {
 	font-weight: 700;
 }
 
+/* Keep the contestant and question prompt clear above the answer grid. */
 .player-greeting {
 	margin: 1rem 0 0.4rem;
 	color: #6b7280;
@@ -736,6 +754,7 @@ button:disabled {
 	gap: 0.7rem;
 }
 
+/* Make each answer a full-width, keyboard-friendly target with separate letter/label styling. */
 .answer-option {
 	display: flex;
 	min-height: 58px;
@@ -799,6 +818,7 @@ button:disabled {
 	font-weight: 700;
 }
 
+/* Group lifeline buttons, their explanations, and the resulting hint message. */
 .lifeline-area {
 	margin-top: 1.5rem;
 	padding-top: 1rem;
@@ -810,6 +830,7 @@ button:disabled {
 	font-size: 1rem;
 }
 
+/* Display the three lifelines evenly on desktop and stack them on small screens below. */
 .lifeline-buttons {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -860,6 +881,7 @@ button:disabled {
 	background: #d1d5db;
 }
 
+/* Give the rank summary and prize ladder a distinct supporting panel. */
 .ladder-panel {
 	padding: 1rem;
 	border: 1px solid #e5e7eb;
@@ -873,6 +895,7 @@ button:disabled {
 	font-size: 1.15rem;
 }
 
+/* Use tabular number spacing so prize amounts line up and milestones are easy to scan. */
 .ladder-legend {
 	margin: 0.4rem 0 0.75rem;
 	color: #6b7280;
@@ -908,6 +931,7 @@ button:disabled {
 	font-weight: 800;
 }
 
+/* Give the end-of-game summary a separate panel from the active question layout. */
 .game-result {
 	max-width: 680px;
 	padding: clamp(1.25rem, 4vw, 2rem);
@@ -949,6 +973,7 @@ button:disabled {
 	backdrop-filter: blur(14px);
 }
 
+/* Override shared text and card colors so they remain legible against the dark quiz stage. */
 .quiz-show-page .site-name {
 	color: #ffe4a0;
 }
@@ -995,6 +1020,7 @@ button:disabled {
 	color: #f8fafc;
 }
 
+/* Keep sound controls grouped and status text readable beside the quiz card. */
 .sound-control {
 	display: flex;
 	align-items: center;
@@ -1024,6 +1050,7 @@ button:disabled {
 	color: #fecaca;
 }
 
+/* Apply the studio's gold-and-blue palette to the question and answer controls. */
 .quiz-show-page .eyebrow {
 	color: #f4cf75;
 }
@@ -1067,6 +1094,7 @@ button:disabled {
 	color: #fff;
 }
 
+/* Match lifelines, walk-away controls, and prize widgets to the studio color palette. */
 .quiz-show-page .lifeline-area {
 	border-color: rgb(193 202 255 / 24%);
 }
